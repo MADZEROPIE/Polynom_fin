@@ -6,7 +6,7 @@ Polynom::Polynom()
 	head->pNext = head;
 }
 
-Polynom::Polynom(std::string s)//Переписать
+Polynom::Polynom(std::string s)//Все просто и компактно (автомат получается в 2 раза больше и некрасивее, но работает быстрее (?) )
 {
 	head = new Node;
 	Node* pNode = head;
@@ -75,13 +75,13 @@ Polynom Polynom::operator-()
 
 Polynom& Polynom::operator+=(const Polynom& pol)
 {
-	Polynom b = pol;
+	Polynom b = pol; //Слишком много действий
 	return this->merge(b);
 }
 
 Polynom& Polynom::operator-=(Polynom& pol)
 {
-	return this->merge(-pol);
+	return this->merge(-pol); 
 }
 
 Polynom Polynom::operator-(Polynom& pol)
@@ -107,7 +107,7 @@ Polynom Polynom::operator*(const Polynom& pol)
 	Polynom res;
 	Node* p = pol.head->pNext;
 	while (p != pol.head) {
-		res.merge((*this) * p->mon);
+		res.merge((*this) * p->mon); //Travis'у это не нравится, мне тоже...
 		p = p->pNext;
 	}
 	return res;
@@ -117,11 +117,13 @@ Polynom Polynom::operator*(const real a)
 {
 	Polynom res(*this);
 	Node* tmp = res.head->pNext;
-	while (tmp != res.head) {
-		tmp->mon *= a;
-		tmp = tmp->pNext;
+	if (a == 0.0) res.clear();
+	else {
+		while (tmp != res.head) {
+			tmp->mon *= a;
+			tmp = tmp->pNext;
+		}
 	}
-	del_zeros();
 	return res;
 }
 

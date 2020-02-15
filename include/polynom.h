@@ -9,7 +9,7 @@
 typedef double real;
 
 #define maxp 1000
-//Полином - это выражение следующего вида 10x3y4z5+5z == 10*(x^3)*(y^4)*(z^5)+5*z
+//Полином - это выражение следующего вида 10x3y4z5+5z-y
 
 class Polynom{
 
@@ -23,7 +23,7 @@ public:
 
 		Monom(real _coef = 0.0, int32_t _pow_coef = -1);
 
-		Monom(int a, int b, int c, real _coef = 0.0);
+		Monom(int32_t a, int32_t b, int32_t c, real _coef = 0.0);
 
 		Monom(std::string a);
 
@@ -47,8 +47,8 @@ public:
 		Monom& operator-=(const Monom& b);
 		Monom& operator*=(const Monom& b);
 
-		std::vector<int> get_deg();
-		int set_deg(int a, int b, int c);
+		std::vector<int32_t> get_deg();
+		int32_t set_deg(int32_t a, int32_t b, int32_t c);
 
 		std::string ToString();
 	};
@@ -61,7 +61,7 @@ public:
 	public:
 		Node* pNext;
 		Monom mon;
-		Node(Monom mon = Monom(), Node* pNext = nullptr) {
+		Node(Monom mon = Monom(), Node* pNext = nullptr) { //Выносить один конструктор в другой файл... 
 			this->mon = mon;
 			this->pNext = pNext;
 		}

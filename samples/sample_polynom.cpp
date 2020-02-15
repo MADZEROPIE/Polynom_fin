@@ -7,13 +7,14 @@ int main(int argc, char** argv)
 {
 	setlocale(LC_ALL, "Russian");
 	Polynom a;
-	Polynom b("10x3y4z5+z");
+	Polynom b("10x3y4z5+5z-y");
 	Polynom c("x3");
-	std::cout << b.ToString() << '\n';
+	
 	a=b*c;
 
-	std::cout << a.ToString()<<'\n';
-	std::cout << c.ToString();
+	std::cout <<"a = "<< a.ToString()<<'\n';
+	std::cout <<"b = "<< b.ToString()<<'\n';
+	std::cout <<"c = "<< c.ToString();
 
 
 	return 0;
