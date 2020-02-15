@@ -7,7 +7,7 @@ int main(int argc, char** argv)
 {
 	setlocale(LC_ALL, "Russian");
 	Polynom a;
-	Polynom b("10x3y4z5+5z-y");
+	Polynom b("10x3y4z5-y+5z-y");
 	Polynom c("x3");
 	
 	a=b*c;

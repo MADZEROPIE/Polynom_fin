@@ -84,7 +84,6 @@ bool Polynom::Monom::operator==(Polynom::Monom b)
 	return pow_coef == b.pow_coef; //Надо сравнивать только степени
 }
 
-
 bool Polynom::Monom::operator==(const real a)
 {
 	return coef == a;
@@ -183,28 +182,19 @@ std::string Polynom::Monom::ToString()
 	std::vector<int> kof = get_deg();
 	std::stringstream ans;
 	ans << "";
-	std::string vars = "xyz";
+	char vars[] = "xyz";
 	if (coef == 0)
 		return ans.str();
-	std::stringstream out;
 	if (coef != 1)
 	{
-		out << coef;
-		ans << out.str();
+		ans << coef;
 	}
 	for (size_t i = 0; i < 3; ++i)
 	{
 		if (kof[i] != 0)
 		{
-			if (kof[i] == 1)
-			{
-				ans << vars[i];
-			}
-			else
-			{
-				ans << vars[i];
-				ans << kof[i];
-			}
+			ans << vars[i];
+			if (kof[i] != 1) ans << kof[i];
 		}
 	}
 	return ans.str();

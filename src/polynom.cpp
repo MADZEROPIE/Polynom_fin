@@ -19,7 +19,7 @@ Polynom::Polynom(std::string s)//Все просто и компактно (автомат получается в 2 
 		pNode->pNext = new Node(tmp,head);
 		pNode = pNode->pNext;
 	}
-
+	sort();
 }
 
 Polynom::Polynom(const Polynom& pol)
@@ -168,6 +168,42 @@ Polynom& Polynom::merge(Polynom& b)
 	return *this;
 }
 
+Polynom& Polynom::sort()
+{
+	Node* p1 = head;
+	Node* p2 = head->pNext;
+	while (p2 != head) { // Если приводить подобные и сортировать за один проход, то начинается какая-то чушь 
+		while (p1->pNext != head) {
+			if (p2 != p1->pNext && p1->pNext->mon == p2->mon) {
+				Node* tmp = p1->pNext;
+				p2->mon += tmp->mon;
+				p1->pNext = p1->pNext->pNext;
+				delete tmp;
+			}
+			p1 = p1->pNext;
+		}
+		p1 = head;
+		p2 = p2->pNext;
+	}
+	p2 = head->pNext;
+	while (p2 != head) {
+		while (p1->pNext != head) {
+			if (p1->pNext->mon < p2->mon) std::swap(p1->pNext->mon, p2->mon);
+			else if (p2 != p1->pNext && p1->pNext->mon == p2->mon) {
+				Node* tmp = p1->pNext;
+				p2->mon += tmp->mon; //Надо делать проверку на 0, а можно потом вызвать del_zeros, что хуже, но ...
+				p1->pNext = p1->pNext->pNext;
+				delete tmp;
+			}
+			p1=p1->pNext;
+		}
+		p1 = head;
+		p2 = p2->pNext;
+	}
+	del_zeros();
+	return *this;
+}
+
 std::string Polynom::ToString()
 {
 	Node* p = head;
@@ -182,9 +218,9 @@ std::string Polynom::ToString()
 	while (p->pNext != head)
 	{
 		if (p->pNext->mon < 0.0)
-			ans += " - ";
+			ans += "-";
 		else
-			ans += " + ";
+			ans += "+";
 		ans += (p->pNext->mon).abs().ToString();
 		p = p->pNext;
 	}
