@@ -18,8 +18,8 @@ real getDouble(std::string s, size_t* i) { // Отвратительная гадость, лучше пере
 	if(((s[*i]=='+' || s[*i]=='-')&& (*i+1)<s.size() && (s[*i+1] >= '0' && s[*i+1] <= '9'))
 		||(s[*i] >= '0' && s[*i]<='9')) 
 		return std::stod(s, i);
-	if (s[*i] == '-') { *i = *i + 1; return -1.0; }
-	if(s[*i]=='+') *i = *i + 1;
+	if (s[*i] == '-' && (*i + 1) < s.size()) { *i = *i + 1; return -1.0; }
+	if(s[*i]=='+' && (*i + 1) < s.size()) *i = *i + 1;
 	return 1.0;
 }
 
@@ -185,7 +185,7 @@ std::string Polynom::Monom::ToString()
 	char vars[] = "xyz";
 	if (coef == 0)
 		return ans.str();
-	if (coef != 1)
+	if (coef != 1 || (coef == 1 && (kof[0]==0 && kof[1]==0 && kof[2]==0)))
 	{
 		ans << coef;
 	}

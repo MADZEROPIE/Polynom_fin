@@ -6,16 +6,20 @@ using std::string;
 int main(int argc, char** argv)
 {
 	setlocale(LC_ALL, "Russian");
-	Polynom a;
-	Polynom b("10x3y4z5-y+5z-y");
-	Polynom c("x3");
-	
-	a=b*c;
 
-	std::cout <<"a = "<< a.ToString()<<'\n';
-	std::cout <<"b = "<< b.ToString()<<'\n';
-	std::cout <<"c = "<< c.ToString();
+	string inp;
+	std::cout << "¬ведите полином a: ";
+	std::cin >> inp;
+	Polynom a(inp);
 
+	std::cout << "¬ведите полином b: ";
+	std::cin >> inp;
+	Polynom b(inp);
+
+	std::cout << "a = " << a.ToString() << '\n';
+	std::cout << "b = " << b.ToString() << '\n';
+	std::cout << "a*b = " << (a*b).ToString() << '\n';
+	std::cout << "a+b = " << (a+b).ToString() <<'\n';
 
 	return 0;
 }
