@@ -26,7 +26,7 @@ public:
 
 		bool operator<(const Monom& b);
 		bool operator<=(const Monom& b);
-		bool operator==(Polynom::Monom b);
+		bool operator==(const Polynom::Monom& b);
 		
 		bool operator==(const real a);
 		bool operator>(const real a);
@@ -53,8 +53,8 @@ public:
 	{
 	public:
 		Node* pNext;
-		Monom mon;
-		Node(Monom mon = Monom(), Node* pNext = nullptr) { //Выносить один конструктор в другой файл... 
+		Polynom::Monom mon;
+		Node(Polynom::Monom mon = Monom(), Node* pNext = nullptr) { //Выносить один конструктор в другой файл... 
 			this->mon = mon;
 			this->pNext = pNext;
 		}
@@ -77,14 +77,14 @@ public:
 	Polynom& operator+=(const Polynom& pol);
 
 	Polynom operator-();
-	Polynom operator-(Polynom& pol);
+	Polynom operator-(const Polynom& pol);
 	Polynom& operator-=(Polynom& pol);
 	
 	Polynom operator*(const real a);
-	Polynom operator*(Polynom::Monom& mon);
+	Polynom operator*(const Polynom::Monom& mon);
 	Polynom operator*(const Polynom& pol);
 
-	Polynom& merge(Polynom& b);
+	Polynom& merge(const Polynom& b);
 	Polynom& sort();
 
 	std::string ToString();

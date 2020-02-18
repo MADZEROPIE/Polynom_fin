@@ -79,7 +79,7 @@ bool Polynom::Monom::operator<=(const Monom& b)
 	return pow_coef <= b.pow_coef; //Надо сравнивать только степени
 }
 
-bool Polynom::Monom::operator==(Polynom::Monom b)
+bool Polynom::Monom::operator==(const Polynom::Monom& b)
 {
 	return pow_coef == b.pow_coef; //Надо сравнивать только степени
 }

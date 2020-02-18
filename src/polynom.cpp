@@ -62,6 +62,12 @@ Polynom Polynom::operator+(const Polynom& pol)
 	return res += pol;
 }
 
+Polynom& Polynom::operator+=(const Polynom& pol)
+{
+	Polynom b = pol; //Слишком много действий
+	return this->merge(b);
+}
+
 Polynom Polynom::operator-()
 {
 	Polynom res(*this);
@@ -73,24 +79,18 @@ Polynom Polynom::operator-()
 	return res;
 }
 
-Polynom& Polynom::operator+=(const Polynom& pol)
+Polynom Polynom::operator-(const Polynom& pol)//стоило поменять местами и всё заработало, магия...
 {
-	Polynom b = pol; //Слишком много действий
-	return this->merge(b);
+	Polynom res = pol;
+	return res += *this;
 }
 
 Polynom& Polynom::operator-=(Polynom& pol)
 {
-	return this->merge(-pol); 
+	return this->merge(pol.operator-()); 
 }
 
-Polynom Polynom::operator-(Polynom& pol)
-{
-	Polynom res = -pol;
-	return res += *this;
-}
-
-Polynom Polynom::operator*(Polynom::Monom& mon)
+Polynom Polynom::operator*(const Polynom::Monom& mon)
 {
 	Polynom res(*this);
 	Node* p = res.head->pNext;
@@ -127,7 +127,7 @@ Polynom Polynom::operator*(const real a)
 	return res;
 }
 
-Polynom& Polynom::merge(Polynom& b)
+Polynom& Polynom::merge(const Polynom& b)
 {
 	Node* head0 = new Node;
 	Node* p1 = head->pNext, * p2 = b.head->pNext, * p0 = head0;
@@ -161,6 +161,7 @@ Polynom& Polynom::merge(Polynom& b)
 			}
 		}
 	}
+	delete head;
 	head = head0;
 	p0->pNext = head;
 	b.head->pNext = b.head;
