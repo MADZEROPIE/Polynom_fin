@@ -6,7 +6,7 @@ Polynom::Polynom()
 	head->pNext = head;
 }
 
-Polynom::Polynom(std::string s)//Переписать
+Polynom::Polynom(std::string s)//Все просто и компактно (автомат получается в 2 раза больше и некрасивее, но работает быстрее (?) )
 {
 	head = new Node;
 	Node* pNode = head;
@@ -19,7 +19,7 @@ Polynom::Polynom(std::string s)//Переписать
 		pNode->pNext = new Node(tmp,head);
 		pNode = pNode->pNext;
 	}
-
+	sort();
 }
 
 Polynom::Polynom(const Polynom& pol)
@@ -62,6 +62,12 @@ Polynom Polynom::operator+(const Polynom& pol)
 	return res += pol;
 }
 
+Polynom& Polynom::operator+=(const Polynom& pol)
+{
+	Polynom b = pol; //Слишком много действий
+	return this->merge(b);
+}
+
 Polynom Polynom::operator-()
 {
 	Polynom res(*this);
@@ -73,24 +79,18 @@ Polynom Polynom::operator-()
 	return res;
 }
 
-Polynom& Polynom::operator+=(const Polynom& pol)
+Polynom Polynom::operator-(const Polynom& pol)//стоило поменять местами и всё заработало, магия...
 {
-	Polynom b = pol;
-	return this->merge(b);
+	Polynom res = pol;
+	return res += *this;
 }
 
 Polynom& Polynom::operator-=(Polynom& pol)
 {
-	return this->merge(-pol);
+	return this->merge(pol.operator-()); 
 }
 
-Polynom Polynom::operator-(Polynom& pol)
-{
-	Polynom res = -pol;
-	return res += *this;
-}
-
-Polynom Polynom::operator*(Polynom::Monom& mon)
+Polynom Polynom::operator*(const Polynom::Monom& mon)
 {
 	Polynom res(*this);
 	Node* p = res.head->pNext;
@@ -107,7 +107,7 @@ Polynom Polynom::operator*(const Polynom& pol)
 	Polynom res;
 	Node* p = pol.head->pNext;
 	while (p != pol.head) {
-		res.merge((*this) * p->mon);
+		res.merge((*this) * p->mon); //Travis'у это не нравится, мне тоже...
 		p = p->pNext;
 	}
 	return res;
@@ -117,15 +117,17 @@ Polynom Polynom::operator*(const real a)
 {
 	Polynom res(*this);
 	Node* tmp = res.head->pNext;
-	while (tmp != res.head) {
-		tmp->mon *= a;
-		tmp = tmp->pNext;
+	if (a == 0.0) res.clear();
+	else {
+		while (tmp != res.head) {
+			tmp->mon *= a;
+			tmp = tmp->pNext;
+		}
 	}
-	del_zeros();
 	return res;
 }
 
-Polynom& Polynom::merge(Polynom& b)
+Polynom& Polynom::merge(const Polynom& b)
 {
 	Node* head0 = new Node;
 	Node* p1 = head->pNext, * p2 = b.head->pNext, * p0 = head0;
@@ -159,10 +161,47 @@ Polynom& Polynom::merge(Polynom& b)
 			}
 		}
 	}
+	delete head;
 	head = head0;
 	p0->pNext = head;
 	b.head->pNext = b.head;
 	del_zeros(); //Можно в этом же проходе проверять на 0, но мне лень
+	return *this;
+}
+
+Polynom& Polynom::sort()
+{
+	Node* p1 = head;
+	Node* p2 = head->pNext;
+	while (p2 != head) { // Если приводить подобные и сортировать за один проход, то начинается какая-то чушь 
+		while (p1->pNext != head) {
+			if (p2 != p1->pNext && p1->pNext->mon == p2->mon) {
+				Node* tmp = p1->pNext;
+				p2->mon += tmp->mon;
+				p1->pNext = p1->pNext->pNext;
+				delete tmp;
+			}
+			p1 = p1->pNext;
+		}
+		p1 = head;
+		p2 = p2->pNext;
+	}
+	p2 = head->pNext;
+	while (p2 != head) {
+		while (p1->pNext != head) {
+			if (p1->pNext->mon < p2->mon) std::swap(p1->pNext->mon, p2->mon);
+			else if (p2 != p1->pNext && p1->pNext->mon == p2->mon) {
+				Node* tmp = p1->pNext;
+				p2->mon += tmp->mon; //Надо делать проверку на 0, а можно потом вызвать del_zeros, что хуже, но ...
+				p1->pNext = p1->pNext->pNext;
+				delete tmp;
+			}
+			p1=p1->pNext;
+		}
+		p1 = head;
+		p2 = p2->pNext;
+	}
+	del_zeros();
 	return *this;
 }
 
@@ -180,9 +219,9 @@ std::string Polynom::ToString()
 	while (p->pNext != head)
 	{
 		if (p->pNext->mon < 0.0)
-			ans += " - ";
+			ans += "-";
 		else
-			ans += " + ";
+			ans += "+";
 		ans += (p->pNext->mon).abs().ToString();
 		p = p->pNext;
 	}
